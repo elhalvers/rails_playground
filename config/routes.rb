@@ -11,8 +11,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  get "/list_posts" => "main#list_posts"
-  get "/show_post/:id" => "main#show_post"
-  get "/new_post" => "main#new_post"
-  post "/create_post" => "main#create_post"
+  get "/list_posts"       => "main#list_posts"
+  get "/show_post/:id"    => "main#show_post"
+  get "/new_post"         => "main#new_post"
+  post "/create_post"     => "main#create_post"
+  get "/edit_post/:id"    => "main#edit_post"
+  post "/update_post/:id" => "main#update_post"
 end
