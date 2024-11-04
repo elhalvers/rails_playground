@@ -15,4 +15,12 @@
 
 <br />
 
-<a href="/edit_post/<%= post['id'] %>">Edit post</a>
+<div>
+  <a href="/edit_post/<%= post['id'] %>">Edit post</a>
+</div>
+
+<div>
+  <form method ="post" action="/delete_post/<%=post['id'] %>">
+    <input type ="submit" value="Delete Post" />
+  </form>
+</div>

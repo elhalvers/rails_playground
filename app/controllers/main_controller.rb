@@ -36,9 +36,6 @@ class MainController < ApplicationController
       params['id']]
 
     redirect_to action: 'list_posts'
-
-
-    
   end
 
   def create_post
@@ -52,6 +49,12 @@ class MainController < ApplicationController
       params['body'],
       params['author'],
       Date.current.to_s]
+
+    redirect_to action: 'list_posts'
+  end
+
+  def delete_post
+    connection.execute("DELETE FROM posts WHERE posts.id = ?", params['id'])
 
     redirect_to action: 'list_posts'
   end
