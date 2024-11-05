@@ -39,17 +39,10 @@ class MainController < ApplicationController
   end
 
   def create_post
-    insert_query = <<-SQL
-      INSERT INTO posts (title, body, author, created_at)
-      VALUES (?,?,?,?)
-    SQL
-
-    connection.execute insert_query,
-      [params['title'],
-      params['body'],
-      params['author'],
-      Date.current.to_s]
-
+    post = Post.new('title' => params['title'],
+                    'body' => params['body'],
+                    'author' => params['author'])
+    post.save
     redirect_to action: 'list_posts'
   end
 
