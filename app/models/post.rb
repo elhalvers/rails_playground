@@ -1,6 +1,12 @@
 class Post
   attr_reader :id, :title, :body, :author, :created_at
 
+  def self.find(id)
+    post_hash = connection.execute("SELECT * FROM posts
+    WHERE posts.id = ? LIMIT 1", id).first
+    Post.new(post_hash)
+  end
+
   def initialize(attributes = {})
     @id = attributes["id"]
     @title = attributes["title"]
@@ -24,9 +30,13 @@ class Post
       ]
   end
 
-  def connection
+  def self.connection
     db_connection = SQLite3::Database.new "db/development.sqlite3"
     db_connection.results_as_hash = true
     db_connection
+  end
+
+  def connection
+    self.class.connection
   end
 end

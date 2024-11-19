@@ -1,12 +1,12 @@
 class MainController < ApplicationController
   def list_posts
-    posts = connection.execute("SELECT * FROM posts")
+    posts = Post.connection.execute("SELECT * FROM posts")
 
     render "main/list_posts", locals: { posts: posts }
   end
 
   def show_post
-    post = find_post_by_id(params["id"])
+    post = Post.find(params["id"])
 
     render "main/show_post", locals: { post: post }
   end
@@ -15,7 +15,7 @@ class MainController < ApplicationController
   end
 
   def edit_post
-    post = find_post_by_id(params["id"])
+    post = Post.find(params["id"])
 
     render "main/edit_post", locals: { post: post }
   end
@@ -39,9 +39,11 @@ class MainController < ApplicationController
   end
 
   def create_post
-    post = Post.new("title" => params["title"],
-                    "body" => params["body"],
-                    "author" => params["author"])
+    post = Post.new(
+                    "title"  => params["title"],
+                    "body"   => params["body"],
+                    "author" => params["author"]
+                    )
     post.save
     redirect_to action: "list_posts"
   end
@@ -50,18 +52,5 @@ class MainController < ApplicationController
     connection.execute("DELETE FROM posts WHERE posts.id = ?", params["id"])
 
     redirect_to action: "list_posts"
-  end
-
-  private
-
-  def connection
-    db_connection = SQLite3::Database.new "db/development.sqlite3"
-    db_connection.results_as_hash = true
-    db_connection
-  end
-
-  def find_post_by_id(id)
-    connection.execute("SELECT * FROM posts
-    WHERE posts.id = ? LIMIT 1", id).first
   end
 end
