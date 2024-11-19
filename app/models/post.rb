@@ -8,14 +8,30 @@ class Post
   end
 
   def initialize(attributes = {})
-    @id = attributes["id"]
+    set_attributes(attributes)
+  end
+
+  def set_attributes(attributes)
+    @id = attributes["id"] if new_record?
     @title = attributes["title"]
     @body = attributes["body"]
     @author = attributes["author"]
-    @created_at = attributes["created_at"]
+    @created_at ||= attributes["created_at"]
+  end
+
+  def new_record?
+    id.nil?
   end
 
   def save
+    if new_record?
+      insert
+    else
+     update
+    end
+  end
+
+  def insert
     insert_query = <<-SQL
       INSERT INTO posts (title, body, author, created_at)
       VALUES (?,?,?,?)
@@ -27,6 +43,24 @@ class Post
       body,
       author,
       Date.current.to_s
+      ]
+  end
+
+  def update
+    update_query = <<-SQL
+      UPDATE posts
+      SET  title  = ?,
+           body   = ?,
+           author = ?
+      WHERE posts.id = ?
+    SQL
+
+    connection.execute update_query,
+      [
+      title,
+      body,
+      author,
+      id
       ]
   end
 
